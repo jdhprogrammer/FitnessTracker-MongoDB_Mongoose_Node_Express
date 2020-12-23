@@ -3,27 +3,43 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const workoutSchema = new Schema({
-    firstName: {
-        type: String,
-        trim: true,
-        required: "First Name is Required"
+    day: {
+        type: Date,
+        default: Date.now
     },
 
-    lastName: {
-        type: String,
-        trim: true,
-        required: "Last Name is Required"
-    },
-
-    username: {
-        type: String,
-        trim: true,
-        required: "Username is Required"
-    },
-}, {
-    toJSON: {
-        virtuals: true
-    }
+    excercise: [{
+        type: {
+            type: String,
+            required: true
+        },
+        name: {
+            type: String,
+            trim: true,
+            lowercase: true,
+            required: true
+        },
+        duration: {
+            type: Number,
+            trim: true,
+            required: true
+        },
+        weight: {
+            type: Number,
+            trim: true,
+            required: true
+        },
+        reps: {
+            type: Number,
+            trim: true,
+            required: true
+        },
+        sets: {
+            type: Number,
+            trim: true,
+            required: true
+        }
+    }]
 });
 
 // adds a dynamically-created property to schema
