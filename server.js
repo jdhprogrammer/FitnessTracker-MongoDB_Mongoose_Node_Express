@@ -23,8 +23,12 @@ app.use(logger("dev"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
-app.use(require("./routes/api-routes"));
-require("./routes/html-routes.js")(app);
+
+const apiRoute = require("./routes/api-routes");
+const htmlRoute = require("./routes/html-routes.js");
+
+app.use("/api/workouts", apiRoute);
+app.use("/", htmlRoute);
 
 mongoose.connect(
     process.env.MONGODB_URI || "mongodb://localhost/fitness-tracker_db", {
