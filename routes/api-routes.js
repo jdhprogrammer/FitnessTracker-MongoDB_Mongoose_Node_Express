@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const db = require("./models");
+const db = require("../models");
 
-router.get('/', async(req, res) => {
+router.get('/api/workouts', async(req, res) => {
     try {
         const result = await db.Workout.find({});
         res.json(result);

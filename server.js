@@ -9,6 +9,7 @@ const client = new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
+
 client.connect((err) => {
     const collection = client.db("test").collection("devices");
     // performs actions on the collection object
@@ -25,20 +26,23 @@ app.use(express.json());
 app.use(express.static("public"));
 
 const apiRoute = require("./routes/api-routes");
-const htmlRoute = require("./routes/html-routes.js");
+const htmlRoute = require("./routes/html-routes");
 
 app.use("/api/workouts", apiRoute);
 app.use("/", htmlRoute);
 
 mongoose.connect(
-    process.env.MONGODB_URI || "mongodb://localhost/fitness-tracker_db", {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true,
-        useFindAndModify: false,
-    }
-);
-
-app.listen(PORT, () => {
-    console.log(`App running on port ${PORT}!`);
-});
+        process.env.MONGODB_URI || "mongodb://localhost/fitness-tracker_db", {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true,
+            useFindAndModify: false,
+        }).then(() => {
+        //Setup Server after connecting to db
+        app.listen(PORT, () => {
+            console.log(`listening on PORT ${PORT}, http://localhost:${PORT}`);
+        });
+    })
+    .catch((error) => {
+        console.log(error.message);
+    });

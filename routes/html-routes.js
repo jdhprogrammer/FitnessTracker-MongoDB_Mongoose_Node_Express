@@ -1,6 +1,8 @@
 // html-routes sending users to the apps html pages //
 
 const path = require("path");
+const express = require("express");
+const router = express.Router();
 
 module.exports = function(app) {
 
