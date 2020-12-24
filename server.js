@@ -2,34 +2,36 @@ const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 
-const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://jdhprogrammer:07ju15ju21@cluster0.hlj2v.mongodb.net/fitness-tracker_db?retryWrites=true&w=majority";
+const MongoClient = require("mongodb").MongoClient;
+const uri =
+    "mongodb+srv://jdhprogrammer:07ju15ju21@cluster0.hlj2v.mongodb.net/fitness-tracker_db?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
 });
-client.connect(err => {
+client.connect((err) => {
     const collection = client.db("test").collection("devices");
     // performs actions on the collection object
     client.close();
 });
 
-const PORT = process.env.PORT || 3001;
-const db = require("./models");
+const PORT = process.env.PORT || 9000;
+
 const app = express();
 
 app.use(logger("dev"));
-app.use(express.urlencoded({
-    extended: true
-}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
+app.use(require("./routes/api-routes"));
+require("./routes/html-routes.js")(app);
 
 mongoose.connect(
-    process.env.MONGODB_URI || 'mongodb://localhost/fitness-tracker_db', {
+    process.env.MONGODB_URI || "mongodb://localhost/fitness-tracker_db", {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true,
-        useFindAndModify: false
+        useFindAndModify: false,
     }
 );
 
