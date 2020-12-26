@@ -42,23 +42,32 @@ const workoutSchema = new Schema({
         },
     }, ],
 }, {
+    toObject: {
+        virtuals: true,
+    },
+
     toJSON: {
         // include any virtual properties when data is requested
         virtuals: true,
     },
 });
 
-// adds a dynamically-created property to schema
 workoutSchema.virtual("totalDuration").get(function() {
-    //loop over this.excercises and return the total duration
-    this.excercises.aggregate({
-        $addFields: {
-            totalDuration: {
-                $sum: "$duration",
-            },
-        },
-    });
+    return this.exercises.reduce((total, exercise) => {
+        return total + (exercise.duration || 0);
+    }, 0);
 });
+// adds a dynamically-created property to schema
+// workoutSchema.virtual("totalDuration").get(function() {
+//     //loop over this.excercises and return the total duration
+//     this.excercises.aggregate({
+//         $addFields: {
+//             totalDuration: {
+//                 $sum: "$duration",
+//             },
+//         },
+//     });
+// });
 
 const Workout = mongoose.model("Workout", workoutSchema);
 

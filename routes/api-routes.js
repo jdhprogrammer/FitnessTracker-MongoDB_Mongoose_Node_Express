@@ -1,16 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const db = require("../models");
+// Import model
+const db = require('../models');
 
-router.get('/api/workouts', async(req, res) => {
-    try {
-        const result = await db.Workout.find({});
-        res.json(result);
-    } catch (err) {
-        res.status(400).json(err);
-    }
+//Route for GET "/api/workouts/"
+
+router.get("/", (req, res) => {
+    db.Workout.find({})
+        .sort({
+            date: -1,
+        })
+        .then((dbWorkout) => {
+            res.json(dbWorkout);
+        })
+        .catch((err) => {
+            res.status(400).json(err);
+        });
 });
 
+//Route for POST "api/workouts/"
 router.post('/', async({ body }, res) => {
     try {
         const result = await db.Workout.create(body);
@@ -20,4 +28,33 @@ router.post('/', async({ body }, res) => {
     }
 });
 
+//Route for PUT "/api/workouts/workout_id"
+router.put('/:id', async({ params, body }, res) => {
+    try {
+        let savedExercises = [];
+        //Find the previous workout by given ID
+        const prevWorkout = await db.Workout.findById(params.id);
+        //Get the previous exererises
+        savedExercises = prevWorkout.exercises;
+        //Add the new workout
+        totalExercises = [...savedExercises, body];
+        res.json(totalExercises);
+        //Update the database
+        await db.Workout.findByIdAndUpdate(params.id, { exercises: totalExercises });
+    } catch (err) {
+        res.status(400).json(err);
+    }
+});
+
+//Route for GET "/api/workouts/range"
+router.get('/range', async(req, res) => {
+    try {
+        const result = await db.Workout.find({});
+        res.json(result);
+    } catch (err) {
+        res.status(400).json(err);
+    }
+});
+
+//Export router
 module.exports = router;
