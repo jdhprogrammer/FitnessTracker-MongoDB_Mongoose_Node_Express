@@ -37,9 +37,6 @@ const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 
-//Import api-routes
-const apiRoute = require("./routes/api-routes");
-const htmlRoute = require("./routes/html-routes");
 
 //Setup PORT
 const PORT = process.env.PORT || 9000;
@@ -54,6 +51,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(express.static("public"));
+
+//Import api-routes
+const apiRoute = require("./routes/api-routes");
+const htmlRoute = require("./routes/html-routes");
 
 //Setup routes handler
 app.use("/api/workouts", apiRoute);
